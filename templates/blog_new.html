@@ -1,0 +1,14 @@
+{% extends"base.html" %}
+{% block title %}
+<title>Not Yet</title>
+{% endblock %}
+{% block content %}
+{% for post in posts: %}
+<div  style="color:white;">Title</div>
+<br>
+<label style="color:white;"><pre>{{post.subject}}                 <post.created></pre></label>
+<div  style="color:white;">Title</div>
+<br>
+<label style="color:white;"><pre>{{post.content}}</pre></label>
+{% endfor %}
+{% endblock %}

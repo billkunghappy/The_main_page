@@ -1,0 +1,23 @@
+{% extends"base.html" %}
+{% block title %}
+<title>Blog</title>
+{% endblock %}
+{% block content %}
+<h1 style="color:white;">This is my Blog</h1>
+<p align="right"><button type="button " style=" width:200px;height:50px"><a href='Blog/newpost' ><em style='color:skyblue;font size:15px'>Make a new post!!</em></a></button></p>
+<ol style="color:white;">
+{% for post in posts: %}
+<li>
+<div style="color:yellow;"><pre>
+<h2>{{post.subject}}<h2>
+</pre></div>
+<div style="color:white;"><pre>
+<h3>{{post.content}}</h3></pre>
+</div>
+<br>
+<br>
+<div style="color:white;">{{post.created}}</div>
+</li>        
+{% endfor %}
+</ol>
+{% endblock %}

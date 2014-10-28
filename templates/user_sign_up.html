@@ -1,0 +1,32 @@
+{% extends"base.html" %}
+{% block title %}
+<title>User Sing Up</title>
+{% endblock %}
+{% block content %}
+<form method="post">
+    <label><h1 style="color:green;">User Sign Up:</h1></label>
+        <br>
+        <label style="color:green;"><h2>Username</h2></label>
+        <br>
+        <input type="text" textarea name="username" value="{{username}}" >
+        <label name="nameerror" value="{{nameerror}}" style="color:green;">{{nameerror}}</label>        
+        <br>
+        <label><h2 style="color:green;">Password</h2></label>
+        <br>
+        <input type="text" textarea name="password" value="{{password}}">
+        <label name="passworderror" value="{{passworderror}}" style="color:green;">{{passworderror}}</label>
+        <br>
+        <label><h2 style="color:green;">Verify Password</h2><label>
+        <br>
+        <input type="text" textarea name="verify" value="{{verify}}">
+        <label name="verifyerror" value="{{verifyerror}}" style="color:green;">{{verifyerror}}</label>        
+        <br>
+        <label><h2 style="color:green;">Email</h2></label>
+        <br>
+        <input type="text" textarea name="email" value="{{email}}">
+        <label name="emailerror" value="{{emailerror}}"  style="color:green;">{{emailerror}}</label>       
+        <br>
+    <input type="submit">
+    </form>
+
+{% endblock %}

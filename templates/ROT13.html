@@ -1,0 +1,12 @@
+{% extends"base.html" %}
+{% block title %}
+<title>ROT13</title>
+{% endblock %}
+{% block content %}
+<form>
+	<label><h1 style="color:white;">Enter some code to ROT13:</h1></label>
+	<br>
+        <input type="text" textarea name="text" value={{text}}>
+	<input type="submit">
+    </form>
+{% endblock %}

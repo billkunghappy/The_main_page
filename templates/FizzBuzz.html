@@ -1,0 +1,33 @@
+{% extends"base.html" %}
+{% block title %}
+<title >FizzBuzz</title>
+{% endblock %}
+{% block content %}
+<form>
+	
+	<h1 style="color:white;">FizzBuzz</h1>
+	<h2 style="color:white;">Give me a number!!</h2>
+	<input type="text" textarea name="n" value={{text}}>
+	<ol>
+			{% if n %}
+				{% for a in range(1,n+1) %}
+					<li style="color:white;">
+						{% if a%3==0: %}
+							{{"Fizz"}}
+						{% endif %}
+						
+						{% if a%5==0 %}
+							{{"Buzz"}}
+						{% endif %}	 
+						
+						{% if a%3!=0 and a%5!=0 %}
+							{{a**2}}
+						{% endif %}
+					</li>
+				{% endfor %}
+			{% endif %}
+		</li>
+	</ol>
+
+</form>
+{% endblock %}
