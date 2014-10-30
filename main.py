@@ -72,7 +72,7 @@ class ROT13(BaseHandler):
                     result=result+chr((ord(a)-ord("a")+13)%26+ord("a"))
         return result
 ###############################################################################
-class User_Sing_Up(BaseHandler):
+class User_Sing_Up1(BaseHandler):
     def render_front(self,username="",password="",verify="",email="",
                     nameerror="",passworderror="",verifyerror="",emailerror=""):
         self.render('user_sign_up.html',username=username,password=password,verify=verify,email=email,
@@ -121,51 +121,7 @@ class Welcome(webapp2.RequestHandler):
     def get(self):
         self.response.out.write("<h1>Welcome,"+self.request.get("username")+"!</h1>")
 #######################################################################################################
-# class Blog(BaseHandler):
-#     the_input=""
-    
-#     def get(self):
-#         self.render('blog_input.html')
-#     def post(self):
-#         title=self.request.get("title")
-#         Word=self.request.get("Word")
-#         terror=""
-#         werror=""
-#         if title!="" and Word!="":
-#             w=Store_Word(title=title,word=Word)
-#             w.put()
-#             self.redirect("/Blog/newpage?title="+title+"&Word="+Word)
-#         else:
-#             if title=="":
-#                 terror="You didn't enter the title!"
-#             if Word=="":
-#                 werror="You didn't enter any word!"
-#             self.render('blog_input.html',title=title,Word=Word,terror=terror,werror=werror)
-# ####escape!!!
-# class Store_Word(db.Model):
-#     title=db.StringProperty(required=True)
-#     word=db.TextProperty(required=True)
-#     Time=db.DateTimeProperty(auto_now_add=True)
-#     Last_time=db.DateTimeProperty(auto_now=True)
 
-# class Blog_Front(BaseHandler):
-#     def front(self):
-#         post=db.GqlQuery("select * from Store_word order by Time desc limit 10")
-#         self.render("blog_frontpage.html",post=post)
-# class Blog_new(Blog):
-#     def get(self):
-#         self.response.out.write(
-#                 "<h1>Back to Blog</h1><br><label><h2>Title</h2></label><br>"
-#                 +self.request.get("title")+
-#                 "<br><br><label><h2>Word</h2></label><br><pre>"+
-#                 self.request.get("Word")+"</pre>")       
-#######/newpost--get thr input page,
-###form inputboxes must have name subject
-####,content,escape
-####can get each page
-###Blog,newpost and 10page
-###error message
-###
 def blog_key(name='default'):
     return db.Key.from_path('blogs', name)
 class Post(db.Model):
@@ -241,17 +197,24 @@ class Cookies_Visits(BaseHandler):
 ###################################################################################################
 class Make_3D(BaseHandler):
     def get(self):
-        self.render("threex test1.html")
+        self.render("threex_test1.html")
+###################################################################################################
+class User_Sign_Up(BaseHandler):
+    def get(self):
+        self.render("USU_L4.html")
+
+
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/FizzBuzz', FizzBuzz),
     ('/ROT13', ROT13),
-    ('/User_Sign_Up', User_Sing_Up),
+    ('/User_Sign_Up1', User_Sing_Up1),
     ('/Welcome', Welcome),
     ('/Blog/newpost',Newpost),
     ('/Blog?',Blog),
     ('/Blog/(\d+)',Blog_new),
     ('/Cookies_Visits',Cookies_Visits),
-    ('/3D',Make_3D)
+    ('/3D',Make_3D),
+    ('/User_Sign_Up',User_Sign_Up)
 ], debug=True)
