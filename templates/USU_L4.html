@@ -1,0 +1,27 @@
+<!-- 無法同時顯示多重個錯誤 -->
+{% extends"base.html" %}
+{% block title %}
+<title>User Sing Up</title>
+{% endblock %}
+{% block content %}
+<form method="post">
+    <label><h1 style="color:green;">User Sign Up:</h1></label>
+        <br>
+        <label style="color:green;"><h2>Username</h2></label>
+        <br>
+        <input type=text name=username pattern="[a-zA-Z0-9]{3,10}" required>
+
+        <label><h2 style="color:green;">Password</h2></label>
+        <br>
+        <input type=text name=Password value="{{password}}" required>
+        <label><h2 style="color:green;">Verify Password</h2><label>
+        <br>
+        <input type=text name=Vpassword value="{{vpassword}}" required>
+        <label><h2 style="color:green;">Email</h2></label>
+        <br>
+        <input type=email name=Email value="{{email}}">
+        <br>
+    <input type="submit">
+    </form>
+
+{% endblock %}
