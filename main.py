@@ -21,6 +21,7 @@ import os
 from jinja2 import Environment, FileSystemLoader
 import re
 import hashlib
+import random
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env= Environment(loader=FileSystemLoader(template_dir),
                                 autoescape=True)
@@ -119,7 +120,16 @@ class User_Sing_Up1(BaseHandler):
 
 class Welcome(webapp2.RequestHandler):
     def get(self):
-        self.response.out.write("<h1>Welcome,"+self.request.get("username")+"!</h1>")
+        user_check=self.request.cookies.get('user')
+        username=(self.request.cookies.get('user')).split('|')[0]
+        if user_check:
+            user_cookie_check=check_secure_val(user_check)
+            if user_cookie_check:
+                username=user_cookie_check
+            else:
+                self.redirect("/User_Sign_Up")
+
+        self.response.out.write("<h1>Welcome,"+username+"!</h1>")
 #######################################################################################################
 
 def blog_key(name='default'):
@@ -200,8 +210,18 @@ class Make_3D(BaseHandler):
         self.render("threex_test1.html")
 ###################################################################################################
 class User_Sign_Up(BaseHandler):
+    def salt():
+        return "".join(random.choice(string.letters)for x in xrange(5))
+    def add_salt(name):
+        return name+salt()
     def get(self):
         self.render("USU_L4.html")
+    def post(self):
+        username=self.request.get("username")
+        self.response.headers['Content-Type']='text/plain'
+        user=make_secure_val(str(username))
+        self.response.headers.add_header('Set-Cookie','user=%s' % user)
+        self.redirect("/Welcome")
 
 
 
