@@ -21,7 +21,7 @@ import os
 from jinja2 import Environment, FileSystemLoader
 import re
 import hashlib
-import random
+import random,string
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env= Environment(loader=FileSystemLoader(template_dir),
                                 autoescape=True)
@@ -117,13 +117,13 @@ class User_Sing_Up1(BaseHandler):
         if not (EML_RE.match(alist[3])):
             email_wrong="Your email isn't valid"
         return name_wrong,password_wrong,not_verify,email_wrong
-
+#######################################################################################################
 class Welcome(webapp2.RequestHandler):
     def get(self):
         user_check=self.request.cookies.get('user')
         username=(self.request.cookies.get('user')).split('|')[0]
         if user_check:
-            user_cookie_check=check_secure_val(user_check)
+            user_cookie_check=check_secure_val(user_check,hash_salt)
             if user_cookie_check:
                 username=user_cookie_check
             else:
@@ -177,15 +177,6 @@ class Blog(BaseHandler):
         self.render('blog_frontpage.html',posts=posts)
         #self.write(posts.content)
 ###################################################################################################
-def hash_str(s):
-    return hashlib.md5(s).hexdigest()
-def make_secure_val(s):
-    return "%s|%s" % (s, hash_str(s))
-def check_secure_val(h):
-    val=h.split('|')[0]
-    if h==make_secure_val(val):
-        return val
-
 class Cookies_Visits(BaseHandler):
     def get(self):
         self.response.headers['Content-Type']='text/plain'
@@ -209,19 +200,63 @@ class Make_3D(BaseHandler):
     def get(self):
         self.render("threex_test1.html")
 ###################################################################################################
+def hash_str(s):
+    return hashlib.md5(s).hexdigest()
+def make_secure_val(s,salt):
+    return "%s|%s" % (s, hash_str(s+salt))
+def check_secure_val(h,salt):
+    val=h.split('|')[0]
+    if h==make_secure_val(val,salt):
+        return val
+
+
+def salt():
+    return "".join(random.choice(string.letters)for x in xrange(5))
+def add_salt(name):
+    salt=salt()
+    return "%s,%s"%(name,salt)
+hash_salt=salt()
+
+class User_data(db.Model):
+    username=db.StringProperty(required=True)
+    password=db.StringProperty(required=True)
+    email=db.StringProperty
+    @classmethod
+    def by_name(cls, name):
+        u = User_data.all().filter('username =', name).get()
+        return u
+
 class User_Sign_Up(BaseHandler):
-    def salt():
-        return "".join(random.choice(string.letters)for x in xrange(5))
-    def add_salt(name):
-        return name+salt()
+    
     def get(self):
         self.render("USU_L4.html")
     def post(self):
         username=self.request.get("username")
-        self.response.headers['Content-Type']='text/plain'
-        user=make_secure_val(str(username))
-        self.response.headers.add_header('Set-Cookie','user=%s' % user)
-        self.redirect("/Welcome")
+        password=self.request.get("password")
+        vpassword=self.request.get("verify")
+        email=self.request.get("email")
+        usererror=""
+        verror=""
+        user_exist= User_data.by_name(username)
+        
+
+        if password ==vpassword and user_exist==None:
+            self.response.headers['Content-Type']='text/plain'
+            user=make_secure_val(str(username),hash_salt)
+            self.response.headers.add_header('Set-Cookie','user=%s' % user)
+            data_user_put=User_data(username=username,password=password,email=email)
+            data_user_put.put()
+            self.redirect("/Welcome")
+        else:
+            if password!=vpassword:
+                verror="Your input didn't varify the password above!"
+            if user_exist!=None:
+                usererror="This user is already exist!"
+
+            self.render("USU_L4.html",verror=verror,usererror=usererror
+                ,username=username,email=email)
+            verror=""
+            usererror=""
 
 
 
@@ -229,12 +264,12 @@ app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/FizzBuzz', FizzBuzz),
     ('/ROT13', ROT13),
-    ('/User_Sign_Up1', User_Sing_Up1),
+    # ('/User_Sign_Up1', User_Sing_Up1),
     ('/Welcome', Welcome),
     ('/Blog/newpost',Newpost),
     ('/Blog?',Blog),
     ('/Blog/(\d+)',Blog_new),
-    ('/Cookies_Visits',Cookies_Visits),
+    # ('/Cookies_Visits',Cookies_Visits),
     ('/3D',Make_3D),
-    ('/User_Sign_Up',User_Sign_Up)
+    ('/signup',User_Sign_Up)
 ], debug=True)
