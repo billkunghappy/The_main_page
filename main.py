@@ -97,7 +97,7 @@ class User_Sing_Up1(BaseHandler):
         a,b,c,d=self.check(alist,EML_RE,PWD_RE,USER_RE)
         
         if a=="" and b=="" and c=="" and d=="" :
-            self.redirect("/Welcome?username="+username)
+            self.redirect("/welcome?username="+username)
         else:
             self.render_front(username,password,verify,email,a,b,c,d)
     def check(self,alist,EML_RE,PWD_RE,USER_RE):
@@ -126,10 +126,17 @@ class Welcome(webapp2.RequestHandler):
             user_cookie_check=check_secure_val(user_check,hash_salt)
             if user_cookie_check:
                 username=user_cookie_check
+                self.response.out.write("<h1>Welcome,"+username+"!</h1><br><br>"+
+            "<button type='button' "+
+            "style=' width:80px;height:30px'>"+
+            "<a href='logout' ><em style='color:skyblue;font size:15px'>"+
+            "Logout!!</em></a></button>")
             else:
-                self.redirect("/User_Sign_Up")
+                self.redirect("/signup")
+        else:
+            self.redirect("/signup")
 
-        self.response.out.write("<h1>Welcome,"+username+"!</h1>")
+            
 #######################################################################################################
 
 def blog_key(name='default'):
@@ -215,6 +222,18 @@ def salt():
 def add_salt(name):
     salt=salt()
     return "%s,%s"%(name,salt)
+def make_pw_hash(pw):
+    pwsalt=salt()
+    hash_pw=hashlib.md5(pw+pwsalt).hexdigest()
+    a="%s,%s"%(pwsalt,hash_pw)
+    return a
+def check_secure_pw(pw,pw_hash):
+    salt=pw_hash.split(',')[0]
+    check_pw=hashlib.md5(pw+salt).hexdigest()
+    a="%s,%s"%(salt,check_pw)
+    if pw_hash==a:
+        return True
+
 hash_salt=salt()
 
 class User_data(db.Model):
@@ -225,6 +244,14 @@ class User_data(db.Model):
     def by_name(cls, name):
         u = User_data.all().filter('username =', name).get()
         return u
+    @classmethod
+    def login(cls, name,password):
+        u=cls.by_name(name)
+        if u and check_secure_pw(password,u.password):
+            return name
+        else:
+            return False
+
 
 class User_Sign_Up(BaseHandler):
     
@@ -244,9 +271,9 @@ class User_Sign_Up(BaseHandler):
             self.response.headers['Content-Type']='text/plain'
             user=make_secure_val(str(username),hash_salt)
             self.response.headers.add_header('Set-Cookie','user=%s' % user)
-            data_user_put=User_data(username=username,password=password,email=email)
+            data_user_put=User_data(username=username,password=make_pw_hash(password),email=email)
             data_user_put.put()
-            self.redirect("/Welcome")
+            self.redirect("/welcome")
         else:
             if password!=vpassword:
                 verror="Your input didn't varify the password above!"
@@ -257,19 +284,41 @@ class User_Sign_Up(BaseHandler):
                 ,username=username,email=email)
             verror=""
             usererror=""
-
-
-
+###################################################################################################
+class Login(BaseHandler):
+    def get(self):
+        self.render('login.html')
+    def post(self):
+        username=self.request.get("username")
+        pw=self.request.get('password')
+        success=User_data.login(username,pw)
+        error=""
+        if success:
+            self.response.headers['Content-Type']='text/plain'
+            user=make_secure_val(str(success),hash_salt)
+            self.response.headers.add_header('Set-Cookie','user=%s' % user)
+            self.redirect("/welcome")
+        else:
+            error="Invalid log in!!"
+            self.render("login.html",username=username,error=error)
+###################################################################################################
+class Logout(BaseHandler):
+    def get(self):
+        self.response.headers['Content-Type']='text/plain'
+        self.response.headers.add_header('Set-Cookie','user=;')
+        self.redirect("/signup")
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/FizzBuzz', FizzBuzz),
     ('/ROT13', ROT13),
     # ('/User_Sign_Up1', User_Sing_Up1),
-    ('/Welcome', Welcome),
+    ('/welcome', Welcome),
     ('/Blog/newpost',Newpost),
     ('/Blog?',Blog),
     ('/Blog/(\d+)',Blog_new),
     # ('/Cookies_Visits',Cookies_Visits),
     ('/3D',Make_3D),
-    ('/signup',User_Sign_Up)
+    ('/signup',User_Sign_Up),
+    ('/login',Login),
+    ('/logout',Logout)
 ], debug=True)

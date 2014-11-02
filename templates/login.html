@@ -1,0 +1,23 @@
+{% extends"base.html" %}
+{% block title %}
+<title>Log in</title>
+{% endblock %}
+{% block content %}
+<form method="post">
+    <label><h1 style="color:green;"><p>Log in !</p></h1></label>
+    <br>
+    <label style="color:green;"><h2>Username</h2></label>
+    <br>
+    <input type=text name=username value="{{username}}" required title="請輸入名稱!!">
+
+    <br>
+    <label style="color:green;"><h2>Password</h2></label>
+    <br>
+    <input type=password name=password required title="請輸入密碼!!">
+    <br>
+    <label style="color:red;">{{error}}</label>
+    <br>
+    <input type="submit">
+</form>
+
+{% endblock %}
