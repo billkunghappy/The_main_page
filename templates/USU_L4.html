@@ -9,17 +9,19 @@
         <br>
         <label style="color:green;"><h2>Username</h2></label>
         <br>
-        <input type=text name=username pattern="[a-zA-Z0-9]{3,10}" required>
-
+        <input type=text name=username pattern="[a-zA-Z0-9]{3,10}" value="{{username}}" required title="名字限定3到10個字喔!!">
+        <label style="color:red;">{{usererror}}</label>
+        <br>
         <label><h2 style="color:green;">Password</h2></label>
         <br>
-        <input type=text name=Password value="{{password}}" required>
+        <input type=password name=password value="{{password}}" required title="請填寫密碼ok??">
         <label><h2 style="color:green;">Verify Password</h2><label>
         <br>
-        <input type=text name=Vpassword value="{{vpassword}}" required>
+        <input type=password name=verify value="{{vpassword}}" required title="請填寫密碼ok??">
+        <label style="color:red;">{{verror}}</label>
         <label><h2 style="color:green;">Email</h2></label>
         <br>
-        <input type=email name=Email value="{{email}}">
+        <input type=email name=email value="{{email}}" title="請輸入email好嗎你這白癡" >
         <br>
     <input type="submit">
     </form>
