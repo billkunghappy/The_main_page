@@ -1,0 +1,46 @@
+{% extends"base.html" %}
+{% block title %}
+<title>Blog</title>
+<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+{% endblock %}
+{% block content %}
+<h1 style="color:white;">This is my Blog(Log in first if you want to post)</h1>
+<a href='login' ><em style='color:skyblue;size=20px'>Login!!</em></a>
+<a href='Blog/newpost' ><em style='color:brown;size=20px'>Make a new post!!</em></a>
+<a href='logout' ><em style='color:red;size=20px'>Log out!!</em></a>
+
+<ol style="color:white;">
+
+{% for post in posts: %}
+<li>
+<div style="color:yellow;"><pre>
+<h2>{{post.subject}}<h2>
+</pre></div>
+<div style="color:white;"><pre>
+<h3>{{post.content}}</h3></pre>
+</div>
+<br>
+<br>
+<div style="color:white;">{{post.created}}</div>
+<br>
+<div style="color:white;"><h2><p>{{post.username}} leave this message</p></h2></div>
+<br>
+<div style="background-color:blue;width: 200px; height: 25px" id="lm" >
+...say something!
+<br>
+</div>
+<div>
+<input type=text style="display:none;height:0px" id="input{{i}}">
+</div>
+
+<script type="text/javascript">
+	$("#lm").click(function(){
+	$("#input").show();
+	$("#input").animate({height:"25px"});
+	 });	
+</script>
+
+</li>        
+{% endfor %}
+</ol>
+{% endblock %}

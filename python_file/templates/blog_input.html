@@ -4,16 +4,18 @@
 {% endblock %}
 {% block content %}
 <form method="post">
+	<h1 style="color:white;">Make a new post!</h1>
+	<br>
 	<label>
-		<div style="color:white;">title</div>
+		<div style="color:white;"><h2>title</h2></div>
 		<br>
 		<input type="text" name="subject" value="{{subject}}">
 		<div style="color:red;">{{terror}}</div>
 	</label>
 	<br>
 	<label>
-	<div style="color:white;">word</div>
-	<textarea name="content" value="{{content}}">{{word}}</textarea>
+	<div style="color:white;"><h2>word<h2></div>
+	<textarea name="content" value="{{content}}" style="width: 800px; height: 250px">{{word}}</textarea>
 	<div style="color:red;">{{werror}}</div>
 	</label>
 	<br>
