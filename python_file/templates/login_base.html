@@ -1,0 +1,56 @@
+{% block fb_API %}
+<div id="fb-root"></div>
+<script>
+      window.fbAsyncInit = function() {
+        FB.init({appId: '{{FACEBOOK_APP_ID}}', status: true,
+                 cookie: true, xfbml: true,oauth: true});
+      };
+      (function() {
+        var e = document.createElement('script');
+        e.type = 'text/javascript';
+        e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+        e.async = true;
+        document.getElementById('fb-root').appendChild(e);
+      }());
+</script>
+{% endblock %}
+{% block login_modal %}
+<div class="modal fade login" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+                    >
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content" id="login_modal">
+                            <p>
+                                <h2 align="center">Log in</h2>
+                                
+                
+                                
+                                <div id="login_div">
+                                <br>
+                                <h4 id="login_signin">Sign in:</h4>
+                                <input type="text" class="form-control" placeholder="Your Name" required data-validation-required-message="Please enter your name."id="login_imput">
+                                <br>
+                                <!-- <h4 align="center">Password</h4> -->
+                                <input type="password" class="form-control" placeholder="Password" required data-validation-required-message="Please enter your password."
+                                 id="login_imput">
+
+<br>
+                                <button type="submit" class="btn btn-primary"
+                                id="login_submit">
+                                Submit</button>
+<br>
+<br>
+                                <button type="button" class="btn btn-primary" id="fb_login_btn"
+                                >
+
+                                    <i class="fa fa-facebook-square fa-2x" 
+                                    style:color="blue"></i>
+                                      Log in with facebook
+                                </button>
+                                <br>
+                                <br>
+                                </div>
+                            </p>
+                            </div>
+                        </div>
+                    </div>
+{% endblock %}

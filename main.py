@@ -53,6 +53,11 @@ class Make_3D(BaseHandler):
     def get(self):
         self.render("threex_test1.html")
 ###################################################################################################
+class TWCL(BaseHandler):
+    def get(self):
+        self.render("twcl.html")
+
+
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     ('/FizzBuzz', FizzBuzz),
@@ -66,5 +71,6 @@ app = webapp2.WSGIApplication([
     ('/3D',Make_3D),
     ('/signup',User_Sign_Up),
     ('/login',Login),
-    ('/logout',Logout)
+    ('/logout',Logout),
+    ('/twcl',TWCL)
 ], debug=True)

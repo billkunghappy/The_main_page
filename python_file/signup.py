@@ -104,21 +104,33 @@ class User_Sign_Up(BaseHandler):
             usererror=""
 ###################################################################################################
 class Login(BaseHandler):
+    def check_already_login(self):
+        cookie=self.request.cookies.get('user_key')
+        if cookie:
+            return None
+        else:
+            return True
+
     def get(self):
         self.render('login.html')
     def post(self):
-        username=self.request.get("username")
-        pw=self.request.get('password')
-        success=User_data.login(username,pw)
-        error=""
-        if success:
-            self.response.headers['Content-Type']='text/plain'
-            userkey=make_secure_val(str(success.key()),hash_salt)
-            self.response.headers.add_header('Set-Cookie','user_key=%s' % userkey)
-            self.redirect("/welcome")
-        else:
-            error="Invalid log in!!"
-            self.render("login.html",username=username,error=error)
+        already=self.check_already_login()
+        if already:
+            username=self.request.get("username")
+            pw=self.request.get('password')
+            success=User_data.login(username,pw)
+            error=""
+            if success:
+                self.response.headers['Content-Type']='text/plain'
+                userkey=make_secure_val(str(success.key()),hash_salt)
+                self.response.headers.add_header('Set-Cookie','user_key=%s' % userkey)
+                self.redirect("/welcome")
+            else:
+                error="Invalid log in!!"
+                self.render("login.html",error=error)
+        # already log in
+        self.redirect("/Blog")
+
 ###################################################################################################
 class Logout(BaseHandler):
     def get(self):
@@ -126,7 +138,7 @@ class Logout(BaseHandler):
         self.response.headers.add_header('Set-Cookie','user_key=;')
         self.redirect("/")
 ###################################################################################################
-class Welcome(webapp2.RequestHandler):
+class Welcome(BaseHandler):
     def get(self):
         cookie=self.request.cookies.get('user_key')
         user=None
@@ -135,15 +147,7 @@ class Welcome(webapp2.RequestHandler):
         if user:
             user=db.get(user)
             if user:
-                self.response.out.write("<h1>Welcome,"+user.username+"!</h1><br><br>"+
-        "<button type='button' "+
-        "style=' width:80px;height:30px'>"+
-        "<a href='logout' ><em style='color:skyblue;font size:15px'>"+
-        "Logout!!</em></a></button><br>"+
-        "<button type='button' "+
-        "style=' width:80px;height:50px'>"+
-        "<a href='Blog' ><em style='color:skyblue;font size:15px'>"+
-        "Go To Blog!!</em></a></button>")
+                self.render("welcome.html",username=user.username)
 
         else:
             self.redirect("/signup")

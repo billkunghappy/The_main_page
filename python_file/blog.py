@@ -102,6 +102,6 @@ class Blog(BaseHandler):
     def get(self):
         posts=db.GqlQuery('select * from Post order by created desc limit 10')
         if self.format == 'html':
-            self.render('blog_frontpage.html',posts=posts)
+            self.render('blog.html',posts=posts)
         else:
             return self.render_json([p.as_dict() for p in posts])
